@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Urlaubsantragsformular</title>
+</head>
+<body>
+  <h2>Urlaubsantragsformular</h2>
+  <form id="leaveForm">
+    <label>Anrede: <input type="text" name="Anrede" required /></label><br />
+    <label>Vorname: <input type="text" name="Vorname" required /></label><br />
+    <label>Nachname: <input type="text" name="Nachname" required /></label><br />
+    <label>E-Mail: <input type="email" name="Email" required /></label><br />
+    <label>Personalnummer: <input type="text" name="Personalnummer" required /></label><br />
+    <label>Abteilung: <input type="text" name="Abteilung" required /></label><br />
+    <label>Urlaubsart: <input type="text" name="Urlaubsart" required /></label><br />
+    <label>Startdatum: <input type="date" name="Startdatum" required /></label><br />
+    <label>Enddatum: <input type="date" name="Enddatum" required /></label><br />
+    <label>Anzahl Werktage: <input type="number" name="Anzahlwerktage" required /></label><br />
+    <label>Vertretung: 
+      <select name="Vertretung">
+        <option value="Ja">Ja</option>
+        <option value="Nein">Nein</option>
+      </select>
+    </label><br />
+    <label>Name der Vertretung: <input type="text" name="Vertretungsname" /></label><br />
+    <label>Kommentar: <textarea name="Kommentar"></textarea></label><br />
+    <button type="submit">Antrag absenden</button>
+  </form>
+
+  <script>
+    document.getElementById('leaveForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const variables = {};
+      formData.forEach((value, key) => {
+        variables[key] = value;
+      });
+
+      const payload = {
+        bpmnProcessId: "Process_omrr7a",
+        variables: variables
+      };
+
+      const response = await fetch("https://bru-2.zeebe.camunda.io/2b7a6225-9929-468d-a437-3e8afbe51827/process-instances", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlFVVXdPVFpDUTBVM01qZEVRME0wTkRFelJrUkJORFk0T0RZeE1FRTBSa1pFUlVWRVF6bERNZyJ9.eyJodHRwczovL2NhbXVuZGEuY29tL2NsdXN0ZXJJZCI6IjJiN2E2MjI1LTk5MjktNDY4ZC1hNDM3LTNlOGFmYmU1MTgyNyIsImh0dHBzOi8vY2FtdW5kYS5jb20vb3JnSWQiOiJmZGY1Y2Y0Mi1iNTVhLTQ1MTAtODFjNC03YWM2ZTQ4YjkyOGIiLCJodHRwczovL2NhbXVuZGEuY29tL2NsaWVudElkIjoiQnZxNjZHcU1ESXlNb1oxSWlyUWRsajFubFZDT2xzcDAiLCJpc3MiOiJodHRwczovL3dlYmxvZ2luLmNsb3VkLmNhbXVuZGEuaW8vIiwic3ViIjoibXdvOTB0MnIzMTYwN3ozNkJOSDY5dFdGS0JYNTVqMVdAY2xpZW50cyIsImF1ZCI6InplZWJlLmNhbXVuZGEuaW8iLCJpYXQiOjE3NTAxOTcyOTksImV4cCI6MTc1MDI4MzY5OSwic2NvcGUiOiIyYjdhNjIyNS05OTI5LTQ2OGQtYTQzNy0zZThhZmJlNTE4MjciLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJhenAiOiJtd285MHQycjMxNjA3ejM2Qk5INjl0V0ZLQlg1NWoxVyJ9.dMUww1JNOJmsH6b4Fp8NQvP8w_xvMjljFZCQVNIRt-SAcboiuQ-VHYaBS3hGOK44S9tWYnVQOxiE_5TQsjwA6ZXesdzF2AWt5JseXWHIyaW5kXtY5ZNiN2-ibSvG-l3AsaVs5GGHPNjK5CbprACGNmfJeTYWxd3bQMwSb228i5I9-4RYNeef3PwUZZ4DqRSwDdiamKpNb0dHXmTKnqudf_WcBICD_Z1X6kSiflf1pIONn2on162kY3E2dj0P4mq65E8aIGDjfUiXV6KD1B3CICeL-GCGQMMs82Per4UXZ7RKhv1Rl3NuqogDgHfRRhx5jBuvce3MOIiUhuNI50SpXA",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        alert("Antrag erfolgreich eingereicht.");
+        form.reset();
+      } else {
+        alert("Fehler beim Absenden: " + response.statusText);
+      }
+    });
+  </script>
+</body>
+</html>
